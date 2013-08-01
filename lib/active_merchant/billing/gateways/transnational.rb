@@ -142,24 +142,31 @@ module ActiveMerchant #:nodoc:
       end
 
       def add_swipe_data(post, options)
-        # unencrypted tracks
-        post[:track_1] = options[:track_1]
-        post[:track_2] = options[:track_2]
-        post[:track_3] = options[:track_3]
-
-        # encrypted tracks
-        post[:magnesafe_track_1] = options[:magnesafe_track_1]
-        post[:magnesafe_track_2] = options[:magnesafe_track_2]
-        post[:magnesafe_track_3] = options[:magnesafe_track_3]
-        post[:magnesafe_magneprint] = options[:magnesafe_magneprint]
-        post[:magnesafe_ksn] = options[:magnesafe_ksn]
-        post[:magnesafe_magneprint_status] = options[:magnesafe_magneprint_status]
+        if options[:magnesafe_track_1]
+          # encrypted magnesafe tracks
+          post[:magnesafe_track_1] = options[:magnesafe_track_1]
+          post[:magnesafe_track_2] = options[:magnesafe_track_2]
+          post[:magnesafe_track_3] = options[:magnesafe_track_3]
+          post[:magnesafe_magneprint] = options[:magnesafe_magneprint]
+          post[:magnesafe_ksn] = options[:magnesafe_ksn]
+          post[:magnesafe_magneprint_status] = options[:magnesafe_magneprint_status]
+        elsif options[:encrypted_track_1]
+          # encrypted non-magnesafe tracks
+          post[:encrypted_track_1] = options[:encrypted_track_1]
+          post[:encrypted_track_2] = options[:encrypted_track_2]
+          post[:encrypted_track_3] = options[:encrypted_track_3]
+          post[:encrypted_ksn] = options[:encrypted_ksn]
+        else 
+          # unencrypted tracks
+          post[:track_1] = options[:track_1]
+          post[:track_2] = options[:track_2]
+          post[:track_3] = options[:track_3]
+        end
       end
 
       def add_payment_method(post, creditcard_or_check_or_vault_id, options)
         post[:processor_id] = options[:processor_id]
         post[:customer_vault] = 'add_customer' if options[:store]
-
         add_swipe_data(post, options)
 
         # creditcard_or_check can be blank if using swipe data
