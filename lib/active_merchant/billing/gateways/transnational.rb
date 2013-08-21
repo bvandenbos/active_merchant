@@ -71,6 +71,7 @@ module ActiveMerchant #:nodoc:
         add_shipping_address(post, options)
         add_payment_method(post, creditcard_or_vault_id, options)
         add_amount(post, money)
+        add_merchant_defined_fields(post, options)
         post
       end
 
@@ -139,6 +140,13 @@ module ActiveMerchant #:nodoc:
         post[:shipping_state] = shipping_address[:state]
         post[:shipping_zip] = shipping_address[:zip]
         post[:shipping_country] = shipping_address[:country]
+      end
+
+      def add_merchant_defined_fields(post, options)
+        (1..20).each do |i|
+          field = "merchant_defined_field_#{i}".to_sym
+          post[field] = options[field] if options[field]
+        end
       end
 
       def add_swipe_data(post, options)
