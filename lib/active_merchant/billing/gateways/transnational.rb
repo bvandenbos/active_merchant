@@ -196,6 +196,7 @@ module ActiveMerchant #:nodoc:
           post[:account_type] = check.account_type
           post[:account_holder_type] = check.account_holder_type
           post[:payment] = 'check'
+          post[:sec_code] = options[:sec_code]
         else
           post[:customer_vault_id] = creditcard_or_check_or_vault_id
         end
