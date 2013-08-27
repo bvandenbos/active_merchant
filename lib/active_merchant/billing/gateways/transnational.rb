@@ -95,6 +95,7 @@ module ActiveMerchant #:nodoc:
       def build_refund_post(money, authorization, options)
         post = {}
         post[:transactionid] = authorization
+        post[:payment] = options[:payment] || 'creditcard'
         add_amount(post, money)
         post        
       end
