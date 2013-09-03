@@ -178,6 +178,8 @@ module ActiveMerchant #:nodoc:
         post[:customer_vault] = 'add_customer' if options[:store]
         add_swipe_data(post, options)
 
+        post[:sec_code] = options[:sec_code] unless options[:sec_code].nil?
+
         # creditcard_or_check can be blank if using swipe data
         if creditcard_or_check_or_vault_id.is_a?(CreditCard) # creditcard or check
           creditcard = creditcard_or_check_or_vault_id
@@ -197,7 +199,6 @@ module ActiveMerchant #:nodoc:
           post[:account_type] = check.account_type
           post[:account_holder_type] = check.account_holder_type
           post[:payment] = 'check'
-          post[:sec_code] = options[:sec_code]
         else
           post[:customer_vault_id] = creditcard_or_check_or_vault_id
         end
