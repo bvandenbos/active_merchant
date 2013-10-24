@@ -52,7 +52,7 @@ module ActiveMerchant #:nodoc:
         commit('refund', post)
       end
 
-      def store(creditcard, optijons = {})
+      def store(creditcard, options = {})
         post = build_store_post(creditcard, options)
         commit_vault('add_customer', post)
       end
@@ -173,10 +173,18 @@ module ActiveMerchant #:nodoc:
         end
       end
 
+      # this is encrypted cc number, cc auth code, and cc expiration
+      def add_encrypted_creditcard_data(post, options)
+        if options[:encrypted_creditcard]
+          post[:encrypted_payment] = options[:encrypted_creditcard]
+        end
+      end
+
       def add_payment_method(post, creditcard_or_check_or_vault_id, options)
         post[:processor_id] = options[:processor_id]
         post[:customer_vault] = 'add_customer' if options[:store]
         add_swipe_data(post, options)
+        add_encrypted_creditcard_data(post, options)
 
         post[:sec_code] = options[:sec_code] unless options[:sec_code].nil?
 
