@@ -54,6 +54,21 @@ class TransnationalTest < Test::Unit::TestCase
     assert response.params['customer_vault_id']
   end
 
+  def test_purchase_with_encrypted_credit_card
+    @gateway
+      .expects(:ssl_post)
+      .with(anything(), purchase_with_encrypted_creditcard('topsecret'))
+      .returns(successful_purchase_and_store)
+
+    # we need a bare-bones credit card
+    credit_card = ActiveMerchant::Billing::CreditCard.new(:first_name => 'Longbob', :last_name => 'Longsen')
+
+    assert response = @gateway.purchase(@amount, credit_card, @options.merge(:encrypted_creditcard => 'topsecret'))
+    assert_success response
+    assert_equal 'SUCCESS', response.message
+    assert response.params['customer_vault_id']
+  end
+
   def test_authorize
     @gateway.expects(:ssl_post).returns(successful_authorize)
 
@@ -149,6 +164,14 @@ class TransnationalTest < Test::Unit::TestCase
   end
 
   private
+
+  # requests
+
+  def purchase_with_encrypted_creditcard(encrypted_creditcard)
+    "address1=1234+My+Street&address2=Apt+1&amount=1.00&ccexp=&ccnumber=&city=Ottawa&country=CA&currency=USD&cvv=&email=&encrypted_payment=#{encrypted_creditcard}&firstname=Longbob&ipaddress=&lastname=Longsen&orderdescription=Store+Purchase&orderid=1&password=password&payment=creditcard&phone=%28555%29555-5555&processor_id=&shipping_address1=&shipping_address2=&shipping_city=&shipping_country=&shipping_state=&shipping_zip=&state=ON&track_1=&track_2=&track_3=&type=sale&username=login&zip=K1C2N6"
+  end
+
+  # reponses
 
   # Place raw successful response from gateway here
   def successful_purchase_response
