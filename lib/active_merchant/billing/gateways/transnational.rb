@@ -209,6 +209,7 @@ module ActiveMerchant #:nodoc:
           post[:payment] = 'check'
         else
           post[:customer_vault_id] = creditcard_or_check_or_vault_id
+          post[:cvv] = options[:cvv] if options[:cvv].present?
         end
       end
 
