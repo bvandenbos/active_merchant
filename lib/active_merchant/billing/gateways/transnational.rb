@@ -22,6 +22,10 @@ module ActiveMerchant #:nodoc:
 
       self.default_currency = 'USD'
 
+      # Responses can take >60s
+      self.open_timeout = 80
+      self.read_timeout = 80
+
       def initialize(options = {})
         requires!(options, :login, :password)
         super
