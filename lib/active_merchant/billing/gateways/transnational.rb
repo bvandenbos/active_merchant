@@ -93,7 +93,8 @@ module ActiveMerchant #:nodoc:
       def build_void_post(authorization, options)
         post = {}
         post[:transactionid] = authorization
-        post        
+        post[:payment] = options[:payment] || 'creditcard'
+        post
       end
 
       def build_refund_post(money, authorization, options)
@@ -101,7 +102,7 @@ module ActiveMerchant #:nodoc:
         post[:transactionid] = authorization
         post[:payment] = options[:payment] || 'creditcard'
         add_amount(post, money)
-        post        
+        post
       end
 
       def build_store_post(creditcard_or_check, options)
@@ -169,7 +170,7 @@ module ActiveMerchant #:nodoc:
           post[:encrypted_track_2] = options[:encrypted_track_2]
           post[:encrypted_track_3] = options[:encrypted_track_3]
           post[:encrypted_ksn] = options[:encrypted_ksn]
-        else 
+        else
           # unencrypted tracks
           post[:track_1] = options[:track_1]
           post[:track_2] = options[:track_2]
@@ -265,4 +266,3 @@ module ActiveMerchant #:nodoc:
     end
   end
 end
-
